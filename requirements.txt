@@ -1,2 +1,2 @@
-pyglet==1.4.4
+pyglet==1.4.5
 Wand==0.5.7
