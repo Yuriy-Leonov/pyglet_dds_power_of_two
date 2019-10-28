@@ -17,8 +17,8 @@ class Window(pyglet.window.Window):
         self.or_simple_add_from_texture("example.dds", x=0, y=-200, z=0)
 
     def add_rect_as_texture_grid(self, file_name, x, y, z):
-        image = pyglet.image.load(file_name)
-        image_grid = pyglet.image.ImageGrid(image, 1, 1)
+        img = pyglet.image.load(file_name)
+        image_grid = pyglet.image.ImageGrid(img, 1, 1)
         texture_grid = image_grid.get_texture_sequence()
         texture_group = pyglet.graphics.TextureGroup(texture_grid)
         x_ = (texture_group.texture.width + x)
@@ -36,8 +36,8 @@ class Window(pyglet.window.Window):
         self.vertices_list.append(vert_list)
 
     def or_simple_add_from_texture(self, file_name, x, y, z):
-        image = pyglet.image.load(file_name)
-        texture_group = pyglet.graphics.TextureGroup(image.get_texture())
+        img = pyglet.image.load(file_name)
+        texture_group = pyglet.graphics.TextureGroup(img.get_texture())
         x_ = (texture_group.texture.width + x)
         y_ = (texture_group.texture.height + y)
         tex_coords = ('t3f', texture_group.texture.tex_coords)

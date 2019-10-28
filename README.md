@@ -1,6 +1,9 @@
 # Describes issues with loading DDS files not power-of-two sizes
+***
+#### Below issue is resolved in 1.4.7 pyglet version
+Issue link - https://github.com/pyglet/pyglet/issues/78
 
-Issue with sprites and .dds files which is not power-of-two sizes:
+####Issue with sprites and .dds files which is not power-of-two sizes:
 
 There are two files(300px*250px):<br>
 source [example.png](creating_sprites/example.png):
