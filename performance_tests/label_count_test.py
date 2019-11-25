@@ -2,6 +2,43 @@ import pyglet
 import uuid
 
 
+# below class is shared by caffeinepills#5210 in discord channel of pyglet
+# and it solves the probles
+class CustomLabel(pyglet.text.Label):
+    ''' Pyglet label replacement using cached groups. '''
+
+    _cached_groups = {}
+    def _init_groups(self, group):
+        if not group:
+            return
+        if group not in self.__class__._cached_groups.keys():
+            top = pyglet.text.layout.TextLayoutGroup(group)
+            bg = pyglet.graphics.OrderedGroup(0, top)
+            fg = pyglet.text.layout.TextLayoutForegroundGroup(1, top)
+            fg2 = pyglet.text.layout.TextLayoutForegroundDecorationGroup(2, top)
+            self.__class__._cached_groups[group] = [top, bg, fg, fg2, 0]
+        groups = self.__class__._cached_groups[group]
+        self.top_group = groups[0]
+        self.background_group = groups[1]
+        self.foreground_group = groups[2]
+        self.foreground_decoration_group = groups[3]
+        groups[4] += 1
+
+    def delete(self):
+        pyglet.text.Label.delete(self)
+        if self.top_group and self.top_group.parent:
+            group = self.top_group.parent
+            if group is not None:
+                groups = self.__class__._cached_groups[group]
+                groups[4] -= 1
+                if not groups[4]:
+                    del self.__class__._cached_groups[group]
+        self.top_group = None
+        self.background_self = None
+        self.foreground_group = None
+        self.foreground_decoration_group = None
+
+
 class Window(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,12 +65,13 @@ class Window(pyglet.window.Window):
     def create_label(self, x, y):
         x = x * 60
         y = y * 20 + 20
-        label = pyglet.text.Label(
+        # label = pyglet.text.Label(
+        label = CustomLabel(  # this is a solution of problem, Thanks to caffeinepills#5210 in discord channel of pyglet
             f'{str(uuid.uuid4())[:5]}', font_name='Arial', font_size=12,
             x=x, y=y,
             anchor_x='left', anchor_y='bottom',
             color=(255, 255, 255, 255),
-            group=self.order_groups[0],  # without group FPS is more than 300, with group - it's about 30-40
+            # group=self.order_groups[0],  # without group FPS is more than 300, with group - it's about 30-40
             batch=self.batch)
         self.collection.append(label)
 
